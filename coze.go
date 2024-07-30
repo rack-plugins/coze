@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 
+	"github.com/fimreal/goutils/ezap"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 )
@@ -53,18 +53,24 @@ func handleTxt2Img(c *gin.Context) {
 	// 尝试绑定 JSON 数据或者表单数据
 	if err := c.ShouldBindJSON(&payload); err != nil {
 		if err := c.ShouldBind(&payload); err != nil {
-			log.Printf("Error binding request data: %v", err)
+			ezap.Errorf("Error binding request data: %v", err)
 			c.JSON(http.StatusBadRequest, ResponseContent{Code: http.StatusBadRequest, Content: "Invalid input"})
 			return
 		}
 	}
 
+	// 打印请求数据
+	ezap.Debug("coze API request: %v", payload)
+
 	apiResponse, err := callChatApi(payload.UserID, payload.BotID, payload.Prompt, payload.ConversationID)
 	if err != nil {
-		log.Printf("Error calling chat API: %v", err)
+		ezap.Errorf("Error calling chat API: %+v", err)
 		c.JSON(http.StatusInternalServerError, ResponseContent{Code: http.StatusInternalServerError, Content: "Failed to call chat API"})
 		return
 	}
+
+	// 打印 coze API 响应
+	ezap.Debug("coze API response: %+v", apiResponse)
 
 	answerContent := extractAnswerContent(apiResponse)
 	if answerContent == "" {
@@ -136,13 +142,8 @@ func callChatApi(userID, botID, query, conversationID string) (*CozeResponse, er
 func extractAnswerContent(cozeResponse *CozeResponse) string {
 	for _, message := range cozeResponse.Messages {
 		if message.Role == "assistant" && message.Type == "answer" {
-			var contentData map[string]interface{}
-			if err := json.Unmarshal([]byte(message.Content), &contentData); err == nil {
-				if content, exists := contentData["content"]; exists {
-					return content.(string)
-				}
-			}
+			return message.Content // 直接返回 Content 字段
 		}
 	}
-	return ""
+	return "" // 如果没有找到，则返回空字符串
 }

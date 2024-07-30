@@ -3,6 +3,7 @@ module github.com/rack-plugins/coze
 go 1.21.6
 
 require (
+	github.com/fimreal/goutils v0.0.0-20240410031514-d4cb5221bad3
 	github.com/fimreal/rack v0.6.4
 	github.com/gin-gonic/gin v1.10.0
 	github.com/spf13/cobra v1.8.1
@@ -14,7 +15,6 @@ require (
 	github.com/bytedance/sonic/loader v0.1.1 // indirect
 	github.com/cloudwego/base64x v0.1.4 // indirect
 	github.com/cloudwego/iasm v0.2.0 // indirect
-	github.com/fimreal/goutils v0.0.0-20240410031514-d4cb5221bad3 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
