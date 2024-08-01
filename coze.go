@@ -18,7 +18,7 @@ const (
 // RequestPayload 定义接收的请求数据结构
 type RequestPayload struct {
 	UserID         string `json:"user_id" form:"user_id" binding:"required"`
-	BotID          string `json:"botid" form:"botid" binding:"required"`
+	BotID          string `json:"bot_id" form:"bot_id" binding:"required"`
 	Prompt         string `json:"prompt" form:"prompt" binding:"required"`
 	ConversationID string `json:"conversation_id" form:"conversation_id"`
 }
